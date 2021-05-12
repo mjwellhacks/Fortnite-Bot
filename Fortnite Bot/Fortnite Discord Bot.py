@@ -159,9 +159,7 @@ class MyClient(discord.Client):
                     else:
                         await message.reply(returnstring, mention_author=False) 
                 else:
-                    await message.reply("Please Specify A User", mention_author=False)
-        else:
-            await message.reply("Please Specify A Platform", mention_author=False)
+                    await message.reply("Please Specify A Platform", mention_author=False)
         if message.content.startswith('!link'):
             if len(listmessage)==2:
                 if message.author.id in discordtofortnite:
