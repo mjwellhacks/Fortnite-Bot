@@ -1,2 +1,3 @@
 def getpath():
-    return "", "", ""
+
+    return "path", "apikey", "discordkey"
