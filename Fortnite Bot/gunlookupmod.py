@@ -6,7 +6,7 @@ import math
 from time import sleep
 from path import getpath
 global path
-path=getpath()
+path, apikey, discordkey=getpath()
 with open(path+"nametonum.json") as f:
     nametonum = json.loads(f.read())
 with open(path+"Nickname Creator/nicknames.json") as f:
@@ -21,7 +21,7 @@ while True:
 	if connect()==True:
 		break
 	sleep(1) #sleep
-response = requests.get("https://fortniteapi.io/v1/loot/list?lang=en",headers={'Authorization': 'key'})
+response = requests.get("https://fortniteapi.io/v1/loot/list?lang=en",headers={'Authorization': apikey})
 f = open(path+"yeet.json", "w")
 f.write(json.dumps(response.json()))
 f.close()

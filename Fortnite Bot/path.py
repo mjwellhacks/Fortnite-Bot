@@ -1,2 +1,2 @@
 def getpath():
-    return ""
+    return "", "", ""

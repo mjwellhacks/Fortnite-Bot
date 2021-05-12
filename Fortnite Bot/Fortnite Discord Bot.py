@@ -3,13 +3,14 @@ from stats import lookup
 import json
 import urllib.request
 import requests
+import threading
 from time import sleep
 from gunlookupmod import lookupgun
 from cosmeticlookupmod import lookupcos
 from path import getpath
 from imagemanip import usdtovbuck, vbuckdisplay
 global path
-path=getpath()
+path, apikey, discordkey=getpath()
 def connect(host='http://google.com'):
     try:
         urllib.request.urlopen(host)
@@ -35,8 +36,21 @@ def lookupmode(name,mode,platform):
         except:
             print('Fortnite Bot Returned: "'+"This Account Is Private."+'"')
             return "This Account Is Private."
+def comkillslookupmode(name,platform):
+    name=name.replace("-","%20")
+    stats=lookup(name,platform)
+    if stats==False:
+        print('Fortnite Bot Returned: "'+"Sorry I Can't Find That User"+'"')
+        return "Sorry I Can't Find That User", -1
+    else:
+        try:
+            print("Combined Kills: "+str(stats["global_stats"]["solo"]["kills"]+stats["global_stats"]["duo"]["kills"]+stats["global_stats"]["squad"]["kills"]))
+            return "Combined Kills: "+str(stats["global_stats"]["solo"]["kills"]+stats["global_stats"]["duo"]["kills"]+stats["global_stats"]["squad"]["kills"]), stats["global_stats"]["solo"]["kills"]+stats["global_stats"]["duo"]["kills"]+stats["global_stats"]["squad"]["kills"]
+        except:
+            print('Fortnite Bot Returned: "'+"This Account Is Private."+'"')
+            return "This Account Is Private.", -1
 def gamemode():
-    response = requests.get("https://fortniteapi.io/v1/game/modes?lang=en",headers={'Authorization': 'key'})
+    response = requests.get("https://fortniteapi.io/v1/game/modes?lang=en",headers={'Authorization': apikey})
     f = open("gamemode.json", "w")
     f.write(json.dumps(response.json()))
     f.close()
@@ -112,6 +126,42 @@ class MyClient(discord.Client):
                 await message.reply(lookupmode(listmessage[1],"Squad","epic"), mention_author=False)
             else:
                 await message.reply("Please Specify A User", mention_author=False)
+        if message.content.startswith('!achievements'):
+            if len(listmessage)==2:
+                print(listmessage[1])
+                platform=listmessage[0].replace("!achievements","")
+                platforms=["xbl","psn",""]
+                if platform in platforms:
+                    if platform=="":
+                        platform="epic"
+                    returnstring, kills=comkillslookupmode(listmessage[1],platform)
+                    mostwanted=discord.File(path+"Achievements/Most Wanted.png")
+                    killmonger=discord.File(path+"Achievements/Killmonger.png")
+                    killmaster=discord.File(path+"Achievements/Kill Master.png")
+                    killleader=discord.File(path+"Achievements/Kill Leader.png")
+                    overkill=discord.File(path+"Achievements/Overkill.png")
+                    killcrazy=discord.File(path+"Achievements/Kill Crazy.png")
+                    if not kills==-1:
+                        achieved=[]
+                        if kills>10000:
+                            achieved.append(mostwanted)
+                        elif kills>5000:
+                            achieved.append(killmonger)
+                        elif kills>4000:
+                            achieved.append(killmaster)
+                        elif kills>3000:
+                            achieved.append(killleader)
+                        elif kills>2000:
+                            achieved.append(overkill)
+                        elif kills>1000:
+                            achieved.append(killcrazy)
+                        await message.reply(returnstring, files=achieved, mention_author=False)
+                    else:
+                        await message.reply(returnstring, mention_author=False) 
+                else:
+                    await message.reply("Please Specify A User", mention_author=False)
+        else:
+            await message.reply("Please Specify A Platform", mention_author=False)
         if message.content.startswith('!link'):
             if len(listmessage)==2:
                 if message.author.id in discordtofortnite:
@@ -169,4 +219,4 @@ class MyClient(discord.Client):
             await message.reply(file=discord.File(path+"vbuckchanged.png"), mention_author=False)
 if __name__=="__main__":
     client = MyClient()
-    client.run('key')
+    client.run(discordkey)
