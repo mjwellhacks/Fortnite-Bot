@@ -1,0 +1,12 @@
+{
+    "gold": "legendary",
+    "purple": "epic",
+    "blue": "rare",
+    "green": "uncommon",
+    "grey": "common",
+    "silver": "common",
+    "ak": "heavy assault rifle",
+    "ar": "assault rifle",
+    "pump": "pump shotgun",
+    "p90": "compact smg"
+}
