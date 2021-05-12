@@ -1,6 +1,6 @@
 # Fortnite Discord Bot
 
-This is a bot for looking up Fortnite stats, gun information, cosmetic information and converting dollars to vbuck prices.
+This is a bot for looking up Fortnite stats, gun information, cosmetic information, custom achievments and converting dollars to vbuck prices.
 
 # Installation
 
