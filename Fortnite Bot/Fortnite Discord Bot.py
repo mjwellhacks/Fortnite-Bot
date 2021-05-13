@@ -44,8 +44,21 @@ def comkillslookupmode(name,platform):
         return "Sorry I Can't Find That User", -1
     else:
         try:
-            print("Combined Kills: "+str(stats["global_stats"]["solo"]["kills"]+stats["global_stats"]["duo"]["kills"]+stats["global_stats"]["squad"]["kills"]))
+            print("Fortnite Bot Returned: Combined Kills: "+str(stats["global_stats"]["solo"]["kills"]+stats["global_stats"]["duo"]["kills"]+stats["global_stats"]["squad"]["kills"]))
             return "Combined Kills: "+str(stats["global_stats"]["solo"]["kills"]+stats["global_stats"]["duo"]["kills"]+stats["global_stats"]["squad"]["kills"]), stats["global_stats"]["solo"]["kills"]+stats["global_stats"]["duo"]["kills"]+stats["global_stats"]["squad"]["kills"]
+        except:
+            print('Fortnite Bot Returned: "'+"This Account Is Private."+'"')
+            return "This Account Is Private.", -1
+def comwinslookupmode(name,platform):
+    name=name.replace("-","%20")
+    stats=lookup(name,platform)
+    if stats==False:
+        print('Fortnite Bot Returned: "'+"Sorry I Can't Find That User"+'"')
+        return "Sorry I Can't Find That User", -1
+    else:
+        try:
+            print("Fortnite Bot Returned: Combined Wins: "+str(stats["global_stats"]["solo"]["placetop1"]+stats["global_stats"]["duo"]["placetop1"]+stats["global_stats"]["squad"]["placetop1"]))
+            return "Combined Wins: "+str(stats["global_stats"]["solo"]["placetop1"]+stats["global_stats"]["duo"]["placetop1"]+stats["global_stats"]["squad"]["placetop1"]), stats["global_stats"]["solo"]["placetop1"]+stats["global_stats"]["duo"]["placetop1"]+stats["global_stats"]["squad"]["placetop1"]
         except:
             print('Fortnite Bot Returned: "'+"This Account Is Private."+'"')
             return "This Account Is Private.", -1
@@ -126,10 +139,9 @@ class MyClient(discord.Client):
                 await message.reply(lookupmode(listmessage[1],"Squad","epic"), mention_author=False)
             else:
                 await message.reply("Please Specify A User", mention_author=False)
-        if message.content.startswith('!achievements'):
+        if message.content.startswith('!kills'):
             if len(listmessage)==2:
-                print(listmessage[1])
-                platform=listmessage[0].replace("!achievements","")
+                platform=listmessage[0].replace("!kills","")
                 platforms=["xbl","psn",""]
                 if platform in platforms:
                     if platform=="":
@@ -155,6 +167,36 @@ class MyClient(discord.Client):
                             achieved.append(overkill)
                         elif kills>1000:
                             achieved.append(killcrazy)
+                        await message.reply(returnstring, files=achieved, mention_author=False)
+                    else:
+                        await message.reply(returnstring, mention_author=False) 
+                else:
+                    await message.reply("Please Specify A Platform", mention_author=False)
+        if message.content.startswith('!wins'):
+            if len(listmessage)==2:
+                platform=listmessage[0].replace("!wins","")
+                platforms=["xbl","psn",""]
+                if platform in platforms:
+                    if platform=="":
+                        platform="epic"
+                    returnstring, wins=comwinslookupmode(listmessage[1],platform)
+                    winveteran=discord.File(path+"Achievements/Win Veteran.png")
+                    wincrazed=discord.File(path+"Achievements/Win Crazed.png")
+                    winsweat=discord.File(path+"Achievements/Win Sweat.png")
+                    winhoarder=discord.File(path+"Achievements/Win Hoarder.png")
+                    winnerwinner=discord.File(path+"Achievements/Winner Winner.png")
+                    if not wins==-1:
+                        achieved=[]
+                        if wins>400:
+                            achieved.append(winveteran)
+                        elif wins>300:
+                            achieved.append(wincrazed)
+                        elif wins>200:
+                            achieved.append(winsweat)
+                        elif wins>100:
+                            achieved.append(winhoarder)
+                        elif wins>50:
+                            achieved.append(winnerwinner)
                         await message.reply(returnstring, files=achieved, mention_author=False)
                     else:
                         await message.reply(returnstring, mention_author=False) 
