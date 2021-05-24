@@ -3,7 +3,6 @@ from stats import lookup
 import json
 import urllib.request
 import requests
-import threading
 from time import sleep
 from gunlookupmod import lookupgun
 from cosmeticlookupmod import lookupcos

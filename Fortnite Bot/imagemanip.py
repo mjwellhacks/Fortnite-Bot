@@ -3,7 +3,7 @@ from PIL import ImageFont
 from PIL import ImageDraw
 import math
 from path import getpath
-path=getpath()
+path, apikey, discordkey=getpath()
 def vbuckdisplay(amount, text):
     font = ImageFont.truetype(path+"BurbankBigCondensed-Black.otf", 90)
     img = Image.open(path+'vbuck.png')

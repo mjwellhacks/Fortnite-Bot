@@ -5,10 +5,9 @@ import difflib
 import math
 from time import sleep
 from path import getpath
+import threading
 global path
 path, apikey, discordkey=getpath()
-with open(path+"cosmeticnametonum.json") as f:
-    nametonum = json.loads(f.read())
 with open(path+"Nickname Creator/nicknamescos.json") as f:
     translations = json.loads(f.read())
 def connect(host='http://google.com'):
@@ -21,6 +20,26 @@ while True:
     if connect()==True:
         break
     sleep(1)
+def updatelist():
+    while True:
+        response = requests.get("https://fortniteapi.io/v2/items/list?lang=en",headers={'Authorization': 'fcde20a2-71497aa3-fa8e3b78-ff54ce5d'})
+        data = response.json()
+        global nametonum
+        nametonum={}
+        i=0
+        while True:
+            try:
+                nametonum.update({str(str(data["items"][i]["name"]).capitalize().rstrip()+" "+data["items"][i]["type"]["id"]).capitalize().rstrip():i})
+                i=i+1
+            except:
+                print("Updated Name To Num")
+                f = open("cosmeticnametonum.json", "w")
+                f.write(json.dumps(nametonum))
+                f.close()
+                break
+        sleep(30)
+updateliststart = threading.Thread(target=updatelist)
+updateliststart.start()
 response = requests.get("https://fortniteapi.io/v2/items/list?lang=en",headers={'Authorization': apikey})
 f = open(path+"cosmetics.json", "w")
 f.write(json.dumps(response.json()))
@@ -65,4 +84,3 @@ def nicktranslate(lookup):
     iterartor=" "
     returnstring=iterartor.join(lookuplist)
     return returnstring.title()
-
